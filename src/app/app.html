@@ -1,1 +1,49 @@
-<router-outlet></router-outlet>
+<mat-toolbar color="primary" class="app-toolbar">
+  <a routerLink="/" class="brand-link">
+    <mat-icon>toys</mat-icon>
+    <span>TOY STORE</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/">
+    <mat-icon>home</mat-icon>
+    Home
+  </a>
+
+  @if (isLoggedIn()) {
+    <a mat-button routerLink="/cart">
+      <mat-icon>shopping_cart</mat-icon>
+      Cart
+    </a>
+
+    <a mat-button routerLink="/reservations">
+      <mat-icon>receipt_long</mat-icon>
+      Reservations
+    </a>
+
+    <a mat-button routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      Profile
+    </a>
+
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  } @else {
+    <a mat-button routerLink="/login">
+      <mat-icon>login</mat-icon>
+      Login
+    </a>
+
+    <a mat-button routerLink="/register">
+      <mat-icon>person_add</mat-icon>
+      Register
+    </a>
+  }
+</mat-toolbar>
+
+<main class="page-content">
+  <router-outlet></router-outlet>
+</main>

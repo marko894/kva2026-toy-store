@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
@@ -9,13 +9,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AgeGroupModel, ToyModel, ToyTypeModel } from '../models/toy.model';
 import { ToyService } from '../services/toy.service';
+import { CartService } from '../services/cart.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -29,16 +31,20 @@ import { ToyService } from '../services/toy.service';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatExpansionModule,
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSnackBarModule,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
   private toyService = inject(ToyService);
+  private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   toys = signal<ToyModel[]>([]);
   toyTypes = signal<ToyTypeModel[]>([]);
@@ -70,9 +76,6 @@ export class Home {
       this.toys.set(toysResponse.data);
       this.toyTypes.set(typesResponse.data);
       this.ageGroups.set(ageGroupsResponse.data);
-
-      console.log('Types:', typesResponse.data);
-      console.log('Age groups:', ageGroupsResponse.data);
     } catch (error) {
       this.errorMessage.set('Failed to load toys and filters.');
       console.error(error);
@@ -144,5 +147,23 @@ export class Home {
     this.maxPrice = null;
     this.dateFrom = null;
     this.dateTo = null;
+  }
+
+  reserveToy(toy: ToyModel): void {
+    if (!this.authService.isLoggedIn()) {
+      this.snackBar.open('Please log in to reserve toys.', 'Close', {
+        duration: 2500,
+      });
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const success = this.cartService.addToyToReservations(toy);
+
+    if (success) {
+      this.snackBar.open('Toy added to reservation cart.', 'Close', {
+        duration: 2500,
+      });
+    }
   }
 }

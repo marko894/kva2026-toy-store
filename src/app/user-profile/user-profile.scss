@@ -1,0 +1,86 @@
+.profile-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.profile-card {
+  width: 100%;
+  padding: 60px 40px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.page-title {
+  margin: 0 0 24px;
+}
+
+.section-header h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.section-header p {
+  margin: 0;
+  color: #666;
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.favorites-section {
+  margin-top: 8px;
+}
+
+.favorites-section h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.actions-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.password-section {
+  margin-top: 40px;
+}
+
+.success-message {
+  margin: 0;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.error-message {
+  margin: 0;
+  color: #c62828;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    padding: 32px 20px;
+  }
+}

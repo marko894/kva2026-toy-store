@@ -1,0 +1,52 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <mat-card-content>
+      <h1 style="margin-bottom: 40px">Registruj se</h1>
+
+      <div class="two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Ime</mat-label>
+          <input matInput [(ngModel)]="firstName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prezime</mat-label>
+          <input matInput [(ngModel)]="lastName" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Lozinka</mat-label>
+        <input matInput type="password" [(ngModel)]="password" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefon</mat-label>
+        <input matInput [(ngModel)]="phone" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Adresa</mat-label>
+        <input matInput [(ngModel)]="address" />
+      </mat-form-field>
+
+      @if (errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+      }
+
+      <button mat-raised-button color="primary" class="full-width" (click)="register()">
+        Register
+      </button>
+    </mat-card-content>
+
+    <mat-card-actions class="auth-actions">
+      <span>Vec imate nalog?</span>
+      <a routerLink="/login">Ulogujte se</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

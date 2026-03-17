@@ -1,0 +1,55 @@
+<div class="cart-page">
+  <h1>Reservation Cart</h1>
+
+  @if (reservedItems().length === 0) {
+    <mat-card class="empty-cart">
+      <mat-card-content>
+        <mat-icon>shopping_cart</mat-icon>
+        <h2>Your cart is empty</h2>
+        <p>You have no reserved toys yet.</p>
+        <a mat-raised-button color="primary" routerLink="/">Browse Toys</a>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <div class="cart-layout">
+      <div class="cart-items">
+        @for (item of reservedItems(); track item.toy.toyId) {
+          <mat-card class="cart-item">
+            <div class="item-content">
+              <img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name" />
+
+              <div class="item-info">
+                <h2>{{ item.toy.name }}</h2>
+                <p>{{ item.toy.price }} RSD</p>
+                <p>Status: {{ item.status }}</p>
+              </div>
+
+              <div class="item-actions">
+                <div class="quantity-controls">
+                  <button mat-icon-button (click)="decreaseQuantity(item.toy.toyId)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+
+                  <span>{{ item.quantity }}</span>
+
+                  <button mat-icon-button (click)="increaseQuantity(item.toy.toyId)">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+
+                <button mat-button color="warn" (click)="removeItem(item.toy.toyId)">Remove</button>
+              </div>
+            </div>
+          </mat-card>
+        }
+      </div>
+
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <h2>Summary</h2>
+          <p>Total: {{ totalPrice() }} RSD</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

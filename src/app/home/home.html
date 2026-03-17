@@ -1,7 +1,4 @@
 <div class="home-container">
-  <h1>Toy Store</h1>
-  <p>Browse available toys</p>
-
   @if (isLoading()) {
     <div class="loading-wrapper">
       <mat-spinner diameter="50"></mat-spinner>
@@ -16,30 +13,30 @@
     <div class="filters-panel">
       <h2 class="filters-title">
         <mat-icon>tune</mat-icon>
-        Filters
+        Filteri
       </h2>
 
       <div class="filters-grid">
         <mat-form-field appearance="outline">
-          <mat-label>Search</mat-label>
+          <mat-label>Pretraga</mat-label>
           <input matInput [(ngModel)]="searchText" />
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Target</mat-label>
+          <mat-label>Ciljna grupa</mat-label>
           <mat-select [(ngModel)]="selectedTargetGroup">
-            <mat-option value="">All</mat-option>
+            <mat-option value="">Svi</mat-option>
             <mat-option value="dečak">Boys</mat-option>
             <mat-option value="devojčica">Girls</mat-option>
-            <mat-option value="svi">All</mat-option>
+            <mat-option value="svi">Svi</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Type</mat-label>
+          <mat-label>Tip</mat-label>
           <mat-select [(ngModel)]="selectedTypeId">
-            <mat-option [value]="null">All</mat-option>
+            <mat-option [value]="null">Sve</mat-option>
             @for (type of toyTypes(); track type.typeId) {
               <mat-option [value]="type.typeId">{{ type.name }}</mat-option>
             }
@@ -47,9 +44,9 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Age</mat-label>
+          <mat-label>Godine</mat-label>
           <mat-select [(ngModel)]="selectedAgeGroupId">
-            <mat-option [value]="null">All</mat-option>
+            <mat-option [value]="null">Sve</mat-option>
             @for (age of ageGroups(); track age.ageGroupId) {
               <mat-option [value]="age.ageGroupId">{{ age.name }}</mat-option>
             }
@@ -57,24 +54,24 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Min Price</mat-label>
+          <mat-label>Minimalna cena</mat-label>
           <input matInput type="number" [(ngModel)]="minPrice" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Max Price</mat-label>
+          <mat-label>Maksimalna cena</mat-label>
           <input matInput type="number" [(ngModel)]="maxPrice" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Date From</mat-label>
+          <mat-label>Proizvedeno od</mat-label>
           <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFrom" />
           <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
           <mat-datepicker #pickerFrom></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Date To</mat-label>
+          <mat-label>Proizvedeno do</mat-label>
           <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateTo" />
           <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
           <mat-datepicker #pickerTo></mat-datepicker>
@@ -82,13 +79,15 @@
 
         <button mat-raised-button color="primary" class="clear-button" (click)="clearFilters()">
           <mat-icon>clear</mat-icon>
-          Reset filter
+          Resetuj filter
         </button>
       </div>
     </div>
 
-    <h2 class="section-title">All Toys</h2>
-    <p class="results-info">Showing {{ filteredToys().length }} of {{ toys().length }} toys</p>
+    <h2 class="section-title">Sve igracke</h2>
+    <p class="results-info">
+      Prikazano {{ filteredToys().length }} od {{ toys().length }} igracaka
+    </p>
 
     <div class="toy-grid">
       @for (toy of filteredToys(); track toy.toyId) {
@@ -98,13 +97,21 @@
           <mat-card-content>
             <h2>{{ toy.name }}</h2>
             <p>{{ toy.description }}</p>
-            <p><strong>Type:</strong> {{ toy.type.name }}</p>
-            <p><strong>Age group:</strong> {{ toy.ageGroup.name }}</p>
-            <p><strong>Price:</strong> {{ toy.price }} RSD</p>
+            <p><strong>Tip:</strong> {{ toy.type.name }}</p>
+            <p><strong>Godine:</strong> {{ toy.ageGroup.name }}</p>
+            <p><strong>Cena:</strong> {{ toy.price }} RSD</p>
           </mat-card-content>
 
           <mat-card-actions>
-            <a mat-button [routerLink]="['/toy', toy.toyId]">Details</a>
+            <a mat-button [routerLink]="['/toy', toy.toyId]">
+              <mat-icon>info</mat-icon>
+              Detalji
+            </a>
+
+            <button mat-button color="primary" (click)="reserveToy(toy)">
+              <mat-icon>shopping_cart</mat-icon>
+              Rezervisi
+            </button>
           </mat-card-actions>
         </mat-card>
       }

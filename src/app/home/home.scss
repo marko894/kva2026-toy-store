@@ -86,3 +86,9 @@ mat-form-field {
 .clear-button {
   height: 56px;
 }
+
+.toy-card mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
