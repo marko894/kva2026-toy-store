@@ -14,36 +14,33 @@ export class CartService {
     return user?.reservations ?? [];
   }
 
-  addToyToReservations(toy: ToyModel): boolean {
+  addToyToReservations(toy: ToyModel, quantity: number = 1): boolean {
     const user = this.authService.getActiveUser();
     if (!user) return false;
 
-    const existingItem = user.reservations.find(
-      (item) => item.toy.toyId === toy.toyId && item.status === 'rezervisano',
-    );
+    const safeQuantity = quantity < 1 ? 1 : quantity;
 
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      user.reservations.push({
-        toy,
-        quantity: 1,
-        status: 'rezervisano',
-        rating: null,
-        reservedAt: new Date().toISOString(),
-      });
-    }
+    const newReservation: ReservedToyModel = {
+      reservationId: crypto.randomUUID(),
+      toy,
+      quantity: safeQuantity,
+      status: 'rezervisano',
+      rating: null,
+      reservedAt: new Date().toISOString(),
+    };
 
+    user.reservations.push(newReservation);
     this.authService.updateActiveUser({ ...user });
     return true;
   }
 
-  updateQuantity(toyId: number, change: number): void {
+  updateQuantity(reservationId: string, change: number): void {
     const user = this.authService.getActiveUser();
     if (!user) return;
 
     const item = user.reservations.find(
-      (reservation) => reservation.toy.toyId === toyId && reservation.status === 'rezervisano',
+      (reservation) =>
+        reservation.reservationId === reservationId && reservation.status === 'rezervisano',
     );
 
     if (!item) return;
@@ -52,39 +49,22 @@ export class CartService {
     this.authService.updateActiveUser({ ...user });
   }
 
-  removeReservedToy(toyId: number): void {
+  removeReservation(reservationId: string): void {
     const user = this.authService.getActiveUser();
     if (!user) return;
 
-    user.reservations = user.reservations.filter(
-      (item) => !(item.toy.toyId === toyId && item.status === 'rezervisano'),
-    );
+    user.reservations = user.reservations.filter((item) => item.reservationId !== reservationId);
 
     this.authService.updateActiveUser({ ...user });
   }
 
-  removeArrivedToy(toyId: number): void {
+  updateReservationStatus(reservationId: string, status: ReservationStatus): void {
     const user = this.authService.getActiveUser();
     if (!user) return;
 
-    user.reservations = user.reservations.filter(
-      (item) => !(item.toy.toyId === toyId && item.status === 'pristiglo'),
+    const item = user.reservations.find(
+      (reservation) => reservation.reservationId === reservationId,
     );
-
-    this.authService.updateActiveUser({ ...user });
-  }
-
-  getTotalPrice(): number {
-    return this.getReservations()
-      .filter((item) => item.status === 'rezervisano')
-      .reduce((sum, item) => sum + item.toy.price * item.quantity, 0);
-  }
-
-  updateReservationStatus(toyId: number, status: ReservationStatus): void {
-    const user = this.authService.getActiveUser();
-    if (!user) return;
-
-    const item = user.reservations.find((reservation) => reservation.toy.toyId === toyId);
 
     if (!item) return;
 
@@ -92,17 +72,45 @@ export class CartService {
     this.authService.updateActiveUser({ ...user });
   }
 
-  rateReservedToy(toyId: number, rating: number): void {
+  rateReservation(reservationId: string, rating: number): void {
     const user = this.authService.getActiveUser();
     if (!user) return;
 
     const item = user.reservations.find(
-      (reservation) => reservation.toy.toyId === toyId && reservation.status === 'pristiglo',
+      (reservation) =>
+        reservation.reservationId === reservationId && reservation.status === 'pristiglo',
     );
 
     if (!item) return;
 
     item.rating = rating;
     this.authService.updateActiveUser({ ...user });
+  }
+
+  getReservedTotalPrice(): number {
+    return this.getReservations()
+      .filter((item) => item.status === 'rezervisano')
+      .reduce((sum, item) => sum + item.toy.price * item.quantity, 0);
+  }
+
+  getAverageRatingForToy(toyId: number): number | null {
+    const users = this.authService.getUsers();
+
+    const ratings = users
+      .flatMap((user) => user.reservations ?? [])
+      .filter(
+        (item) => item.toy.toyId === toyId && item.status === 'pristiglo' && item.rating !== null,
+      )
+      .map((item) => item.rating as number);
+
+    if (ratings.length === 0) return null;
+
+    const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+
+    return Number(average.toFixed(1));
+  }
+
+  getSubtotal(item: ReservedToyModel): number {
+    return item.toy.price * item.quantity;
   }
 }

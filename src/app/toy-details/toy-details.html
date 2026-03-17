@@ -17,6 +17,7 @@
         <mat-card-content>
           <h1>{{ toy()!.name }}</h1>
           <p class="price">{{ toy()!.price }} RSD</p>
+          <p><strong>Ocena:</strong> {{ getAverageRating(toy()!.toyId) }}</p>
           <p class="description">{{ toy()!.description }}</p>
 
           <mat-chip-set class="chips">
@@ -36,6 +37,18 @@
             <mat-icon>arrow_back</mat-icon>
             Nazad
           </a>
+
+          <div class="quantity-box">
+            <button mat-icon-button (click)="decreaseQuantity()">
+              <mat-icon>remove</mat-icon>
+            </button>
+
+            <input class="quantity-input" type="number" min="1" [(ngModel)]="quantity" />
+
+            <button mat-icon-button (click)="increaseQuantity()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
 
           <button mat-raised-button color="primary" (click)="reserveToy()">
             <mat-icon>shopping_cart</mat-icon>

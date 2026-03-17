@@ -12,12 +12,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AgeGroupModel, ToyModel, ToyTypeModel } from '../models/toy.model';
 import { ToyService } from '../services/toy.service';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
+import { Alerts } from '../utils/alerts';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +34,6 @@ import { AuthService } from '../services/auth.service';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
@@ -44,13 +43,14 @@ export class Home {
   private cartService = inject(CartService);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
 
   toys = signal<ToyModel[]>([]);
   toyTypes = signal<ToyTypeModel[]>([]);
   ageGroups = signal<AgeGroupModel[]>([]);
   isLoading = signal(true);
   errorMessage = signal('');
+
+  quantityMap: Record<number, number> = {};
 
   searchText = '';
   selectedTypeId: number | null = null;
@@ -76,6 +76,10 @@ export class Home {
       this.toys.set(toysResponse.data);
       this.toyTypes.set(typesResponse.data);
       this.ageGroups.set(ageGroupsResponse.data);
+
+      for (const toy of toysResponse.data) {
+        this.quantityMap[toy.toyId] = 1;
+      }
     } catch (error) {
       this.errorMessage.set('Failed to load toys and filters.');
       console.error(error);
@@ -149,21 +153,35 @@ export class Home {
     this.dateTo = null;
   }
 
+  increaseQuantity(toyId: number): void {
+    this.quantityMap[toyId] = (this.quantityMap[toyId] || 1) + 1;
+  }
+
+  decreaseQuantity(toyId: number): void {
+    const current = this.quantityMap[toyId] || 1;
+    this.quantityMap[toyId] = Math.max(1, current - 1);
+  }
+
   reserveToy(toy: ToyModel): void {
     if (!this.authService.isLoggedIn()) {
-      this.snackBar.open('Please log in to reserve toys.', 'Close', {
-        duration: 2500,
-      });
       this.router.navigate(['/login']);
       return;
     }
 
-    const success = this.cartService.addToyToReservations(toy);
+    const quantity = this.quantityMap[toy.toyId] || 1;
+
+    const success = this.cartService.addToyToReservations(toy, quantity);
 
     if (success) {
-      this.snackBar.open('Toy added to reservation cart.', 'Close', {
-        duration: 2500,
-      });
+      Alerts.success(
+        `Uspesno je ${quantity > 1 ? 'rezervisano' : 'rezervisan'} ${quantity} ${quantity > 1 ? 'artikla' : 'artikal'}.`,
+      );
+      this.quantityMap[toy.toyId] = 1;
     }
+  }
+
+  getAverageRating(toyId: number): string {
+    const rating = this.cartService.getAverageRatingForToy(toyId);
+    return rating === null ? 'Nema ocena' : `${rating}/5`;
   }
 }

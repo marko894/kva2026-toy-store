@@ -100,13 +100,31 @@
             <p><strong>Tip:</strong> {{ toy.type.name }}</p>
             <p><strong>Godine:</strong> {{ toy.ageGroup.name }}</p>
             <p><strong>Cena:</strong> {{ toy.price }} RSD</p>
+            <p><strong>Ocena:</strong> {{ getAverageRating(toy.toyId) }}</p>
           </mat-card-content>
 
-          <mat-card-actions>
+          <mat-card-actions class="toy-actions">
             <a mat-button [routerLink]="['/toy', toy.toyId]">
               <mat-icon>info</mat-icon>
               Detalji
             </a>
+
+            <div class="quantity-box">
+              <button mat-icon-button (click)="decreaseQuantity(toy.toyId)">
+                <mat-icon>remove</mat-icon>
+              </button>
+
+              <input
+                class="quantity-input"
+                type="number"
+                min="1"
+                [(ngModel)]="quantityMap[toy.toyId]"
+              />
+
+              <button mat-icon-button (click)="increaseQuantity(toy.toyId)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
 
             <button mat-button color="primary" (click)="reserveToy(toy)">
               <mat-icon>shopping_cart</mat-icon>

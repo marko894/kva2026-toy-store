@@ -92,3 +92,25 @@ mat-form-field {
   justify-content: space-between;
   align-items: center;
 }
+
+.toy-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quantity-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.quantity-input {
+  width: 48px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}

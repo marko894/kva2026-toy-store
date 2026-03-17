@@ -1,68 +1,48 @@
 <div class="reservations-page">
-  <h1>My Reservations</h1>
+  <h1>Moje rezervacije</h1>
 
   <mat-card class="status-card">
     <mat-card-content>
-      <h2>Reserved</h2>
+      <h2>Rezervisano</h2>
 
       @if (reservedItems().length === 0) {
-        <p class="empty-text">No reserved toys.</p>
+        <p class="empty-text">Nema rezervisanih igracaka.</p>
       } @else {
-        @for (item of reservedItems(); track item.toy.toyId) {
+        @for (item of reservedItems(); track item.reservationId) {
           <div class="reservation-row">
-            <img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name" />
+            <a [routerLink]="['/toy', item.toy.toyId]" class="toy-image-link">
+              <img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name" />
+            </a>
 
             <div class="reservation-info">
               <h3>{{ item.toy.name }}</h3>
               <p>Quantity: {{ item.quantity }}</p>
               <p>Price: {{ item.toy.price }} RSD</p>
+              <p><strong>Subtotal:</strong> {{ getSubtotal(item) }} RSD</p>
             </div>
 
             <div class="reservation-actions">
-              <button mat-button color="primary" (click)="markAsArrived(item.toy.toyId)">
+              <div class="quantity-controls">
+                <button mat-icon-button (click)="decreaseQuantity(item.reservationId)">
+                  <mat-icon>remove</mat-icon>
+                </button>
+
+                <span>{{ item.quantity }}</span>
+
+                <button mat-icon-button (click)="increaseQuantity(item.reservationId)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+
+              <button mat-button color="primary" (click)="markAsArrived(item.reservationId)">
                 Mark as Arrived
               </button>
-              <button mat-button color="warn" (click)="cancelReservation(item.toy.toyId)">
+
+              <button mat-button color="warn" (click)="cancelReservation(item.reservationId)">
                 Cancel
               </button>
-            </div>
-          </div>
-        }
-      }
-    </mat-card-content>
-  </mat-card>
 
-  <mat-card class="status-card">
-    <mat-card-content>
-      <h2>Arrived</h2>
-
-      @if (arrivedItems().length === 0) {
-        <p class="empty-text">No arrived toys.</p>
-      } @else {
-        @for (item of arrivedItems(); track item.toy.toyId) {
-          <div class="reservation-row">
-            <img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name" />
-
-            <div class="reservation-info">
-              <h3>{{ item.toy.name }}</h3>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p>Price: {{ item.toy.price }} RSD</p>
-            </div>
-
-            <div class="reservation-actions">
-              @if (item.rating === null) {
-                <div class="rating-row">
-                  @for (star of stars; track star) {
-                    <button mat-icon-button (click)="rateToy(item.toy.toyId, star)">
-                      <mat-icon>star_border</mat-icon>
-                    </button>
-                  }
-                </div>
-              } @else {
-                <p class="rating-text">Rating: {{ item.rating }}/5</p>
-              }
-
-              <button mat-button color="warn" (click)="removeArrivedToy(item.toy.toyId)">
+              <button mat-button color="warn" (click)="removeReservation(item.reservationId)">
                 Remove
               </button>
             </div>
@@ -74,19 +54,71 @@
 
   <mat-card class="status-card">
     <mat-card-content>
-      <h2>Cancelled</h2>
+      <h2>Pristiglo</h2>
 
-      @if (cancelledItems().length === 0) {
-        <p class="empty-text">No cancelled toys.</p>
+      @if (arrivedItems().length === 0) {
+        <p class="empty-text">Nema pristiglih igracaka.</p>
       } @else {
-        @for (item of cancelledItems(); track item.toy.toyId) {
+        @for (item of arrivedItems(); track item.reservationId) {
           <div class="reservation-row">
-            <img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name" />
+            <a [routerLink]="['/toy', item.toy.toyId]" class="toy-image-link">
+              <img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name" />
+            </a>
 
             <div class="reservation-info">
               <h3>{{ item.toy.name }}</h3>
               <p>Quantity: {{ item.quantity }}</p>
               <p>Price: {{ item.toy.price }} RSD</p>
+              <p><strong>Subtotal:</strong> {{ getSubtotal(item) }} RSD</p>
+            </div>
+
+            <div class="reservation-actions">
+              @if (item.rating === null) {
+                <div class="rating-row">
+                  @for (star of stars; track star) {
+                    <button mat-icon-button (click)="rateReservation(item.reservationId, star)">
+                      <mat-icon>star_border</mat-icon>
+                    </button>
+                  }
+                </div>
+              } @else {
+                <p class="rating-text">Rating: {{ item.rating }}/5</p>
+              }
+
+              <button mat-button color="warn" (click)="removeReservation(item.reservationId)">
+                Remove
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="status-card">
+    <mat-card-content>
+      <h2>Otkazano</h2>
+
+      @if (cancelledItems().length === 0) {
+        <p class="empty-text">Nema otkazanih rezervacija.</p>
+      } @else {
+        @for (item of cancelledItems(); track item.reservationId) {
+          <div class="reservation-row">
+            <a [routerLink]="['/toy', item.toy.toyId]" class="toy-image-link"
+              ><img [src]="getImageUrl(item.toy.imageUrl)" [alt]="item.toy.name"
+            /></a>
+
+            <div class="reservation-info">
+              <h3>{{ item.toy.name }}</h3>
+              <p>Quantity: {{ item.quantity }}</p>
+              <p>Price: {{ item.toy.price }} RSD</p>
+              <p><strong>Subtotal:</strong> {{ getSubtotal(item) }} RSD</p>
+            </div>
+
+            <div class="reservation-actions">
+              <button mat-button color="warn" (click)="removeReservation(item.reservationId)">
+                Remove
+              </button>
             </div>
           </div>
         }

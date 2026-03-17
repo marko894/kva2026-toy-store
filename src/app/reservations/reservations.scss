@@ -66,3 +66,36 @@
     align-items: flex-start;
   }
 }
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.quantity-controls span {
+  min-width: 24px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.toy-image-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.toy-image-link img {
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.toy-image-link img:hover {
+  transform: scale(1.03);
+}

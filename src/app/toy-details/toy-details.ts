@@ -1,29 +1,31 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ToyModel } from '../models/toy.model';
 import { ToyService } from '../services/toy.service';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
+import { Alerts } from '../utils/alerts';
 
 @Component({
   selector: 'app-toy-details',
   imports: [
     CommonModule,
+    FormsModule,
     RouterLink,
     MatCardModule,
     MatButtonModule,
     MatChipsModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule,
   ],
   templateUrl: './toy-details.html',
   styleUrl: './toy-details.scss',
@@ -34,11 +36,11 @@ export class ToyDetails {
   private cartService = inject(CartService);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
 
   toy = signal<ToyModel | null>(null);
   isLoading = signal(true);
   errorMessage = signal('');
+  quantity = 1;
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -61,11 +63,16 @@ export class ToyDetails {
     return `https://toy.pequla.com${imageUrl}`;
   }
 
+  increaseQuantity(): void {
+    this.quantity += 1;
+  }
+
+  decreaseQuantity(): void {
+    this.quantity = Math.max(1, this.quantity - 1);
+  }
+
   reserveToy(): void {
     if (!this.authService.isLoggedIn()) {
-      this.snackBar.open('Please log in to reserve toys.', 'Close', {
-        duration: 2500,
-      });
       this.router.navigate(['/login']);
       return;
     }
@@ -73,12 +80,18 @@ export class ToyDetails {
     const currentToy = this.toy();
     if (!currentToy) return;
 
-    const success = this.cartService.addToyToReservations(currentToy);
+    const success = this.cartService.addToyToReservations(currentToy, this.quantity);
 
     if (success) {
-      this.snackBar.open('Toy added to reservation cart.', 'Close', {
-        duration: 2500,
-      });
+      Alerts.success(
+        `Uspesno je ${this.quantity > 1 ? 'rezervisano' : 'rezervisan'} ${this.quantity} ${this.quantity > 1 ? 'artikla' : 'artikal'}.`,
+      );
+      this.quantity = 1;
     }
+  }
+
+  getAverageRating(toyId: number): string {
+    const rating = this.cartService.getAverageRatingForToy(toyId);
+    return rating === null ? 'Nema ocena' : `${rating}/5`;
   }
 }

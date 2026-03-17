@@ -9,10 +9,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
 import { ReservedToyModel } from '../models/user.model';
+import { Alerts } from '../utils/alerts';
 
 @Component({
   selector: 'app-reservations',
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './reservations.html',
   styleUrl: './reservations.scss',
 })
@@ -48,23 +49,39 @@ export class Reservations {
     return `https://toy.pequla.com${imageUrl}`;
   }
 
-  markAsArrived(toyId: number): void {
-    this.cartService.updateReservationStatus(toyId, 'pristiglo');
+  getSubtotal(item: ReservedToyModel): number {
+    return this.cartService.getSubtotal(item);
+  }
+
+  increaseQuantity(reservationId: string): void {
+    this.cartService.updateQuantity(reservationId, 1);
     this.loadReservations();
   }
 
-  cancelReservation(toyId: number): void {
-    this.cartService.updateReservationStatus(toyId, 'otkazano');
+  decreaseQuantity(reservationId: string): void {
+    this.cartService.updateQuantity(reservationId, -1);
     this.loadReservations();
   }
 
-  rateToy(toyId: number, rating: number): void {
-    this.cartService.rateReservedToy(toyId, rating);
+  markAsArrived(reservationId: string): void {
+    this.cartService.updateReservationStatus(reservationId, 'pristiglo');
+    this.loadReservations();
+    Alerts.success('Rezervacija je oznacena kao pristigla.');
+  }
+
+  cancelReservation(reservationId: string): void {
+    this.cartService.updateReservationStatus(reservationId, 'otkazano');
     this.loadReservations();
   }
 
-  removeArrivedToy(toyId: number): void {
-    this.cartService.removeArrivedToy(toyId);
+  rateReservation(reservationId: string, rating: number): void {
+    this.cartService.rateReservation(reservationId, rating);
+    this.loadReservations();
+    Alerts.success('Uspesno ste ocenili igracku.');
+  }
+
+  removeReservation(reservationId: string): void {
+    this.cartService.removeReservation(reservationId);
     this.loadReservations();
   }
 }

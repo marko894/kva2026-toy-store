@@ -3,6 +3,7 @@ import { ToyModel } from './toy.model';
 export type ReservationStatus = 'rezervisano' | 'pristiglo' | 'otkazano';
 
 export interface ReservedToyModel {
+  reservationId: string;
   toy: ToyModel;
   quantity: number;
   status: ReservationStatus;

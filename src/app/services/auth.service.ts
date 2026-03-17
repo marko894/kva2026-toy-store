@@ -19,8 +19,8 @@ export class AuthService {
       const defaultUser: UserModel = {
         firstName: 'Marko',
         lastName: 'User',
-        email: 'user@example.com',
-        password: 'user123',
+        email: 'marko.user@email.com',
+        password: 'user123!',
         phone: '0601234567',
         address: 'Main Street 1',
         favoriteToyTypes: [],

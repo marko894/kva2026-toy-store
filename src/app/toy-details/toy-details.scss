@@ -46,8 +46,24 @@ mat-card-actions {
   padding: 16px;
 }
 
-.success-message {
-  color: #2e7d32;
-  font-weight: 500;
-  margin-top: 12px;
+.details-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.quantity-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.quantity-input {
+  width: 52px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }

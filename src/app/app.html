@@ -8,38 +8,33 @@
 
   <a mat-button routerLink="/">
     <mat-icon>home</mat-icon>
-    Home
+    Pocetna
   </a>
 
   @if (isLoggedIn()) {
-    <a mat-button routerLink="/cart">
-      <mat-icon>shopping_cart</mat-icon>
-      Cart
-    </a>
-
     <a mat-button routerLink="/reservations">
       <mat-icon>receipt_long</mat-icon>
-      Reservations
+      Rezervacije
     </a>
 
     <a mat-button routerLink="/profile">
       <mat-icon>person</mat-icon>
-      Profile
+      Profil
     </a>
 
     <button mat-button (click)="logout()">
       <mat-icon>logout</mat-icon>
-      Logout
+      Izloguj se
     </button>
   } @else {
     <a mat-button routerLink="/login">
       <mat-icon>login</mat-icon>
-      Login
+      Uloguj se
     </a>
 
     <a mat-button routerLink="/register">
       <mat-icon>person_add</mat-icon>
-      Register
+      Registruj se
     </a>
   }
 </mat-toolbar>
