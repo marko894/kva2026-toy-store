@@ -13,21 +13,98 @@
       </mat-card-content>
     </mat-card>
   } @else {
+    <div class="filters-panel">
+      <h2 class="filters-title">
+        <mat-icon>tune</mat-icon>
+        Filters
+      </h2>
+
+      <div class="filters-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="searchText" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Target</mat-label>
+          <mat-select [(ngModel)]="selectedTargetGroup">
+            <mat-option value="">All</mat-option>
+            <mat-option value="dečak">Boys</mat-option>
+            <mat-option value="devojčica">Girls</mat-option>
+            <mat-option value="svi">All</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="selectedTypeId">
+            <mat-option [value]="null">All</mat-option>
+            @for (type of toyTypes(); track type.typeId) {
+              <mat-option [value]="type.typeId">{{ type.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Age</mat-label>
+          <mat-select [(ngModel)]="selectedAgeGroupId">
+            <mat-option [value]="null">All</mat-option>
+            @for (age of ageGroups(); track age.ageGroupId) {
+              <mat-option [value]="age.ageGroupId">{{ age.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Min Price</mat-label>
+          <input matInput type="number" [(ngModel)]="minPrice" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Max Price</mat-label>
+          <input matInput type="number" [(ngModel)]="maxPrice" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date From</mat-label>
+          <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFrom" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFrom></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date To</mat-label>
+          <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateTo" />
+          <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerTo></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="clear-button" (click)="clearFilters()">
+          <mat-icon>clear</mat-icon>
+          Reset filter
+        </button>
+      </div>
+    </div>
+
+    <h2 class="section-title">All Toys</h2>
+    <p class="results-info">Showing {{ filteredToys().length }} of {{ toys().length }} toys</p>
+
     <div class="toy-grid">
-      @for (toy of toys(); track toy.toyId) {
+      @for (toy of filteredToys(); track toy.toyId) {
         <mat-card class="toy-card">
           <img mat-card-image [src]="getImageUrl(toy.imageUrl)" [alt]="toy.name" />
 
           <mat-card-content>
             <h2>{{ toy.name }}</h2>
             <p>{{ toy.description }}</p>
-            <p><strong>Tip:</strong> {{ toy.type.name }}</p>
-            <p><strong>Godine:</strong> {{ toy.ageGroup.name }}</p>
-            <p><strong>Cena:</strong> {{ toy.price }} RSD</p>
+            <p><strong>Type:</strong> {{ toy.type.name }}</p>
+            <p><strong>Age group:</strong> {{ toy.ageGroup.name }}</p>
+            <p><strong>Price:</strong> {{ toy.price }} RSD</p>
           </mat-card-content>
 
           <mat-card-actions>
-            <a mat-button [routerLink]="['/toy', toy.toyId]">Detalji</a>
+            <a mat-button [routerLink]="['/toy', toy.toyId]">Details</a>
           </mat-card-actions>
         </mat-card>
       }
