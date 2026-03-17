@@ -4,10 +4,12 @@ import { ToyModel } from '../models/toy.model';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, RouterLink, MatButtonModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

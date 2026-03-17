@@ -25,6 +25,10 @@
             <p><strong>Godine:</strong> {{ toy.ageGroup.name }}</p>
             <p><strong>Cena:</strong> {{ toy.price }} RSD</p>
           </mat-card-content>
+
+          <mat-card-actions>
+            <a mat-button [routerLink]="['/toy', toy.toyId]">Detalji</a>
+          </mat-card-actions>
         </mat-card>
       }
     </div>

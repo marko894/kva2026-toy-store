@@ -1,0 +1,43 @@
+<div class="page-center">
+  <div class="details-container">
+    @if (isLoading()) {
+      <div class="loading-wrapper">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+    } @else if (errorMessage()) {
+      <mat-card>
+        <mat-card-content>
+          <p>{{ errorMessage() }}</p>
+        </mat-card-content>
+      </mat-card>
+    } @else if (toy()) {
+      <mat-card class="details-card">
+        <img mat-card-image [src]="getImageUrl(toy()!.imageUrl)" [alt]="toy()!.name" />
+
+        <mat-card-content>
+          <h1>{{ toy()!.name }}</h1>
+          <p class="price">{{ toy()!.price }} RSD</p>
+          <p class="description">{{ toy()!.description }}</p>
+
+          <mat-chip-set class="chips">
+            <mat-chip>{{ toy()!.type.name }}</mat-chip>
+            <mat-chip>{{ toy()!.ageGroup.name }}</mat-chip>
+            <mat-chip>{{ toy()!.targetGroup }}</mat-chip>
+          </mat-chip-set>
+
+          <p>
+            <strong>Datum proizvodnje:</strong>
+            {{ toy()!.productionDate | date: 'mediumDate' }}
+          </p>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <a mat-button routerLink="/">
+            <mat-icon>arrow_back</mat-icon>
+            Nazad
+          </a>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+</div>
