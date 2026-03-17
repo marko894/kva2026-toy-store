@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 import { ToyService } from '../services/toy.service';
 import { ToyTypeModel } from '../models/toy.model';
 import { UserModel } from '../models/user.model';
+import { Alerts } from '../utils/alerts';
 
 @Component({
   selector: 'app-user-profile',
@@ -48,9 +49,6 @@ export class UserProfile {
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
-  passwordError = '';
-  profileMessage = '';
-  passwordMessage = '';
 
   constructor() {
     this.loadProfile();
@@ -94,8 +92,6 @@ export class UserProfile {
   }
 
   saveProfile(): void {
-    this.profileMessage = '';
-
     const currentUser = this.user();
     if (!currentUser) return;
 
@@ -110,38 +106,35 @@ export class UserProfile {
 
     this.authService.updateActiveUser(updatedUser);
     this.user.set(updatedUser);
-    this.profileMessage = 'Profile updated successfully.';
+    Alerts.success('Profil azuriran uspesno.');
   }
 
   changePassword(): void {
-    this.passwordError = '';
-    this.passwordMessage = '';
-
     const currentUser = this.user();
     if (!currentUser) return;
 
     if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
-      this.passwordError = 'Please fill in all password fields.';
+      Alerts.error('Unesite podatke u sva polja.');
       return;
     }
 
     if (this.currentPassword !== currentUser.password) {
-      this.passwordError = 'Current password is incorrect.';
+      Alerts.error('Trenutna lozinka je pogresna.');
       return;
     }
 
     if (this.newPassword.length < 6) {
-      this.passwordError = 'New password must be at least 6 characters long.';
+      Alerts.error('Nova lozinka mora imati vise od 6 karaktera.');
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
-      this.passwordError = 'New password and confirm password do not match.';
+      Alerts.error('Morate potvrditi lozinku.');
       return;
     }
 
     if (this.newPassword === this.currentPassword) {
-      this.passwordError = 'New password must be different from current password.';
+      Alerts.error('Nova lozinka se mora razlikovati od stare.');
       return;
     }
 
@@ -157,6 +150,7 @@ export class UserProfile {
     this.currentPassword = '';
     this.newPassword = '';
     this.confirmPassword = '';
-    this.passwordMessage = 'Password changed successfully.';
+
+    Alerts.success('Password changed successfully.');
   }
 }

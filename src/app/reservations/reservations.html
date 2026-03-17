@@ -16,9 +16,9 @@
 
             <div class="reservation-info">
               <h3>{{ item.toy.name }}</h3>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p>Price: {{ item.toy.price }} RSD</p>
-              <p><strong>Subtotal:</strong> {{ getSubtotal(item) }} RSD</p>
+              <p>Kolicina: {{ item.quantity }}</p>
+              <p>Cena: {{ item.toy.price }} RSD</p>
+              <p><strong>Suma proizvoda:</strong> {{ getSubtotal(item) }} RSD</p>
             </div>
 
             <div class="reservation-actions">
@@ -35,15 +35,15 @@
               </div>
 
               <button mat-button color="primary" (click)="markAsArrived(item.reservationId)">
-                Mark as Arrived
+                Cekiraj kao pristiglo
               </button>
 
               <button mat-button color="warn" (click)="cancelReservation(item.reservationId)">
-                Cancel
+                Otkazi
               </button>
 
               <button mat-button color="warn" (click)="removeReservation(item.reservationId)">
-                Remove
+                Ukloni
               </button>
             </div>
           </div>
@@ -67,9 +67,9 @@
 
             <div class="reservation-info">
               <h3>{{ item.toy.name }}</h3>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p>Price: {{ item.toy.price }} RSD</p>
-              <p><strong>Subtotal:</strong> {{ getSubtotal(item) }} RSD</p>
+              <p>Kolicina: {{ item.quantity }}</p>
+              <p>Cena: {{ item.toy.price }} RSD</p>
+              <p><strong>Suma proizvoda:</strong> {{ getSubtotal(item) }} RSD</p>
             </div>
 
             <div class="reservation-actions">
@@ -82,11 +82,11 @@
                   }
                 </div>
               } @else {
-                <p class="rating-text">Rating: {{ item.rating }}/5</p>
+                <p class="rating-text">Ocena: {{ item.rating }}/5</p>
               }
 
               <button mat-button color="warn" (click)="removeReservation(item.reservationId)">
-                Remove
+                Ukloni
               </button>
             </div>
           </div>
@@ -110,14 +110,14 @@
 
             <div class="reservation-info">
               <h3>{{ item.toy.name }}</h3>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p>Price: {{ item.toy.price }} RSD</p>
-              <p><strong>Subtotal:</strong> {{ getSubtotal(item) }} RSD</p>
+              <p>Kolicina: {{ item.quantity }}</p>
+              <p>Cena: {{ item.toy.price }} RSD</p>
+              <p><strong>Suma proizvoda:</strong> {{ getSubtotal(item) }} RSD</p>
             </div>
 
             <div class="reservation-actions">
               <button mat-button color="warn" (click)="removeReservation(item.reservationId)">
-                Remove
+                Ukloni
               </button>
             </div>
           </div>

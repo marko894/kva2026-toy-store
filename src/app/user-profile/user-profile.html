@@ -45,10 +45,6 @@
           </div>
         </div>
 
-        @if (profileMessage) {
-          <p class="success-message">{{ profileMessage }}</p>
-        }
-
         <div class="actions-row" style="margin-bottom: 40px">
           <button mat-raised-button color="primary" (click)="saveProfile()">Sacuvaj</button>
         </div>
@@ -75,14 +71,6 @@
             <input matInput type="password" [(ngModel)]="confirmPassword" />
           </mat-form-field>
         </div>
-
-        @if (passwordError) {
-          <p class="error-message">{{ passwordError }}</p>
-        }
-
-        @if (passwordMessage) {
-          <p class="success-message">{{ passwordMessage }}</p>
-        }
 
         <div class="actions-row">
           <button mat-raised-button color="accent" (click)="changePassword()">Sacuvaj</button>

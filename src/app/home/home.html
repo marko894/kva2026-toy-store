@@ -10,6 +10,28 @@
       </mat-card-content>
     </mat-card>
   } @else {
+    @if (hasRecommendations()) {
+      <div class="recommended-section">
+        <div class="section-header">
+          <h2>Preporuceno za Vas</h2>
+          <p>Na osnovu vasih omiljenih igracaka.</p>
+        </div>
+
+        <div class="recommended-list">
+          @for (toy of getRecommendedToys(); track toy.toyId) {
+            <a [routerLink]="['/toy', toy.toyId]" class="recommended-item">
+              <img [src]="getImageUrl(toy.imageUrl)" [alt]="toy.name" />
+              <div class="recommended-info">
+                <span class="recommended-name">{{ toy.name }}</span>
+                <span class="recommended-price">{{ toy.price }} RSD</span>
+                <span class="recommended-rating"> Rating: {{ getAverageRating(toy.toyId) }} </span>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+    }
+
     <div class="filters-panel">
       <h2 class="filters-title">
         <mat-icon>tune</mat-icon>

@@ -184,4 +184,18 @@ export class Home {
     const rating = this.cartService.getAverageRatingForToy(toyId);
     return rating === null ? 'Nema ocena' : `${rating}/5`;
   }
+
+  getRecommendedToys(): ToyModel[] {
+    const activeUser = this.authService.getActiveUser();
+
+    if (!activeUser || !activeUser.favoriteToyTypes?.length) {
+      return [];
+    }
+
+    return this.toys().filter((toy) => activeUser.favoriteToyTypes.includes(toy.type.name));
+  }
+
+  hasRecommendations(): boolean {
+    return this.getRecommendedToys().length > 0;
+  }
 }

@@ -63,18 +63,6 @@ mat-form-field {
   margin-top: 40px;
 }
 
-.success-message {
-  margin: 0;
-  color: #2e7d32;
-  font-weight: 500;
-}
-
-.error-message {
-  margin: 0;
-  color: #c62828;
-  font-weight: 500;
-}
-
 @media (max-width: 640px) {
   .two-columns {
     grid-template-columns: 1fr;

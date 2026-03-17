@@ -7,6 +7,17 @@ export class Alerts {
       title: 'Success',
       text: message,
       confirmButtonText: 'OK',
+      timer: 1800,
+      timerProgressBar: true,
+    });
+  }
+
+  static error(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
+      confirmButtonText: 'OK',
     });
   }
 }
