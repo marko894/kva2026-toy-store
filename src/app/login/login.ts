@@ -27,7 +27,7 @@ export class Login {
   private router = inject(Router);
 
   email = 'marko.user@email.com';
-  password = 'user123';
+  password = 'user123!';
   errorMessage = '';
 
   login(): void {
